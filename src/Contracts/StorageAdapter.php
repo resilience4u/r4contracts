@@ -3,31 +3,31 @@ declare(strict_types=1);
 
 namespace Resilience4u\R4Contracts\Contracts;
 
-/**
- * Abstraction for persistence of transient policy state (e.g. CircuitBreaker counters, cache, etc.).
- */
 interface StorageAdapter
 {
     /**
-     * Fetches a value from storage.
-     *
-     * @param string $key The key to retrieve.
-     * @param mixed $default Default value if key is missing.
-     * @return mixed
+     * Retrieves a value.
      */
     public function get(string $key, mixed $default = null): mixed;
 
     /**
-     * Stores a value with an optional TTL (in seconds).
-     *
-     * @param string $key
-     * @param mixed $value
-     * @param int $ttl Time to live (0 = infinite).
+     * Sets a value with an optional TTL.
      */
-    public function set(string $key, mixed $value, int $ttl = 0): void;
+    public function set(string $key, mixed $value, ?int $ttl = null): bool;
 
     /**
-     * Deletes a key from storage.
+     * Deletes a key.
      */
-    public function delete(string $key): void;
+    public function delete(string $key): bool;
+
+    /**
+     * Atomically increments a numeric value.
+     * Creates the key if it does not exist.
+     */
+    public function increment(string $key, int $by = 1, ?int $ttl = null): int;
+
+    /**
+     * Retrieves multiple values at once.
+     */
+    public function getMultiple(array $keys): array;
 }
